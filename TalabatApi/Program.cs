@@ -5,6 +5,7 @@ using BusinessLogicLayer.Repositories;
 using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TalabatApi.Extantions;
 using TalabatApi.Helpers;
 
 namespace TalabatApi
@@ -22,15 +23,13 @@ namespace TalabatApi
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("StoreConnection")));
 
 
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddAutoMapper(typeof(MappingProfiles));
-            
-            
-            
-            
+            builder.Services.AddAplicationServices();
+
+
+
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwagerServices();
 
             var app = builder.Build();
 
@@ -53,8 +52,7 @@ namespace TalabatApi
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddleWare();
             }
             app.UseStaticFiles();
             app.UseStatusCodePagesWithReExecute("Errors/{0}");
