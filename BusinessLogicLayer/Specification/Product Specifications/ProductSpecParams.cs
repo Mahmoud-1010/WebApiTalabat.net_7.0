@@ -21,14 +21,14 @@ namespace BusinessLogicLayer.Specification
         }
         public int? BrandId { get; set; }
         public int? TypeId { get; set; }
-        public string Sort { get; set; }
+        public string? Sort { get; set; }
 
-        private string search;
+        private string? search;
 
-        public string Search
+        public string? Search
         {
             get { return search; }
-            set { search = value.ToLower(); }
+            set { search = value?.ToLower(); }
         }
 
     }
