@@ -1,4 +1,5 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using BusinessLogicLayer.Specification;
 using DataAccessLayer.Data;
 using DataAccessLayer.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -20,9 +21,23 @@ namespace BusinessLogicLayer.Repositories
         }
         public async Task<IReadOnlyList<T>> GetAllAsync()
             => await _context.Set<T>().ToListAsync();
-
         public async Task<T> GetByIdAsync(int id)
             => await _context.Set<T>().FindAsync(id);
+
+        public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
+            => await ApplySpecifications(spec).ToListAsync();
+
+        public async Task<T> GetByIdWithSpecAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecifications(spec).FirstOrDefaultAsync();
+        }
+
+
+        private IQueryable<T> ApplySpecifications(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_context.Set<T>(), spec);
+        }
+
         
     }
 }

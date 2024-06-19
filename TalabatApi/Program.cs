@@ -1,9 +1,11 @@
 
+using AutoMapper;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Repositories;
 using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TalabatApi.Helpers;
 
 namespace TalabatApi
 {
@@ -21,7 +23,7 @@ namespace TalabatApi
 
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             
             
             
@@ -54,7 +56,7 @@ namespace TalabatApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
