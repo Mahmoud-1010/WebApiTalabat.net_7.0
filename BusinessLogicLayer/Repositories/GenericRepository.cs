@@ -37,7 +37,12 @@ namespace BusinessLogicLayer.Repositories
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>(), spec);
         }
-
+        // To Get Count Product in API
+        public async Task<int> GetCountWithSpecAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecifications(spec).CountAsync();
+        }
+        
         
     }
 }

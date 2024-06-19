@@ -14,5 +14,6 @@ namespace BusinessLogicLayer.Interfaces
         Task<IReadOnlyList<T>> GetAllAsync();
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
         Task<T> GetByIdWithSpecAsync(ISpecification<T> spec);
+        Task<int> GetCountWithSpecAsync(ISpecification<T> spec);
     }
 }
