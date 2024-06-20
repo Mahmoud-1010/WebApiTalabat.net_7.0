@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Repositories;
+using BusinessLogicLayer.Services;
 using TalabatApi.Helpers;
 
 namespace TalabatApi.Extantions
@@ -10,7 +11,8 @@ namespace TalabatApi.Extantions
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddAutoMapper(typeof(MappingProfiles));
-
+            services.AddScoped(typeof(IBasketRepository),typeof(BasketRepository));
+            services.AddScoped<ITokenService, TokenService>();
             return services;
         }
 

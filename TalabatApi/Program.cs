@@ -3,8 +3,13 @@ using AutoMapper;
 using BusinessLogicLayer.Interfaces;
 using BusinessLogicLayer.Repositories;
 using DataAccessLayer.Data;
+using DataAccessLayer.Entities.Identity;
+using DataAccessLayer.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using TalabatApi.Extantions;
 using TalabatApi.Helpers;
 
@@ -21,10 +26,18 @@ namespace TalabatApi
             builder.Services.AddControllers();
             builder.Services.AddDbContext<ApplicationStoreDbContext>(options
                 => options.UseSqlServer(builder.Configuration.GetConnectionString("StoreConnection")));
-
+            builder.Services.AddDbContext<AppIdentityDbContext>(options=>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+            builder.Services.AddSingleton<IConnectionMultiplexer>(S =>
+            {
+                var connection = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(connection);
+            });
 
             builder.Services.AddAplicationServices();
-
+            builder.Services.AddIdentityServices(builder.Configuration);
 
 
 
@@ -42,6 +55,11 @@ namespace TalabatApi
                 var dbContext = services.GetRequiredService<ApplicationStoreDbContext>();
                 await dbContext.Database.MigrateAsync();// Apply Migrations
                 await ApplicationStoreContextSeed.SeedAsync(dbContext,LoggerFactory);
+
+                var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+                await identityContext.Database.MigrateAsync();
+                var userManger = services.GetRequiredService<UserManager<AppUser>>();
+                await AppIdentityDbContextSeed.SeedUsersAsync(userManger);
             }
             catch (Exception ex)
             {
@@ -59,7 +77,6 @@ namespace TalabatApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
