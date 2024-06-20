@@ -1,4 +1,5 @@
 ﻿using DataAccessLayer.Entities;
+using DataAccessLayer.Entities.Order;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -45,16 +46,16 @@ namespace DataAccessLayer.Data
 
                     await context.SaveChangesAsync();
                 }
-                //if (!context.DeliveryMethods.Any())
-                //{
-                //    var deliverMethodsData =
-                //        File.ReadAllText("../Talabat.DAL/Data/SeedData/delivery.json");
-                //    var deliverMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliverMethodsData);
-                //    foreach (var deliverMethod in deliverMethods)
-                //        context.DeliveryMethods.Add(deliverMethod);
+                if (!context.DeliveryMethods.Any())
+                {
+                    var deliverMethodsData =
+                        File.ReadAllText("../DataAccessLayer/Data/SeedData/delivery.json");
+                    var deliverMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliverMethodsData);
+                    foreach (var deliverMethod in deliverMethods)
+                        context.DeliveryMethods.Add(deliverMethod);
 
-                //    await context.SaveChangesAsync();
-                //}
+                    await context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
