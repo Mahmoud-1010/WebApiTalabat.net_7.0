@@ -1,1 +1,1 @@
-# WebApiTalabat .net 8.0
+# WebApiTalabat .net 7.0
